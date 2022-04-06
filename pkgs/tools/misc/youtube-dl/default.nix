@@ -76,7 +76,7 @@ buildPythonPackage rec {
       the public domain, which means you can modify it, redistribute it or use
       it however you like.
     '';
-    license = licenses.publicDomain;
+    license = licenses.unlicense;
     maintainers = with maintainers; [ bluescreen303 fpletz ma27 ];
     platforms = with platforms; linux ++ darwin;
   };
