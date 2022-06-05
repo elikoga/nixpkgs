@@ -11193,6 +11193,8 @@ with pkgs;
 
   umlet = callPackage ../tools/misc/umlet { };
 
+  umami = callPackage ../servers/umami { };
+
   unetbootin = libsForQt5.callPackage ../tools/cd-dvd/unetbootin { };
 
   unfs3 = callPackage ../servers/unfs3 { };
