@@ -511,9 +511,13 @@ if [ -z "$rollback" ]; then
     log "building the system configuration..."
     if [[ "$action" = switch || "$action" = boot ]]; then
         if [[ -z $flake ]]; then
-            pathToConfig="$(nixBuild '<nixpkgs/nixos>' --no-out-link -A system "${extraBuildFlags[@]}")"
+            outLink=$tmpDir/result
+            # saving the result in a tmp dir prevents garbage collection mid-switch
+            # the flakes build already does this withing nixFlakeBuild
+            nixBuild '<nixpkgs/nixos>' --out-link $outLink -A system "${extraBuildFlags[@]}"
+            pathToConfig="$(readlink -f $outLink)"
         else
-            pathToConfig="$(nixFlakeBuild "$flake#$flakeAttr.config.system.build.toplevel" "${extraBuildFlags[@]}" "${lockFlags[@]}")"
+            nixFlakeBuild "$flake#$flakeAttr.config.system.build.toplevel" "${extraBuildFlags[@]}" "${lockFlags[@]}"
         fi
         copyToTarget "$pathToConfig"
         targetHostCmd nix-env -p "$profile" --set "$pathToConfig"
