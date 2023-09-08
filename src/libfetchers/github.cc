@@ -190,7 +190,12 @@ struct GitArchiveInputScheme : InputScheme
         if (!maybeGetStrAttr(input.attrs, "ref")) input.attrs.insert_or_assign("ref", "HEAD");
 
         auto rev = input.getRev();
+        unsigned int tarballTtl = settings.tarballTtl;
+        if (settings.tarballTtl != std::numeric_limits<unsigned int>::max()) {
+            settings.tarballTtl = 5;
+        }
         if (!rev) rev = getRevFromRef(store, input);
+        settings.tarballTtl = tarballTtl;
 
         input.attrs.erase("ref");
         input.attrs.insert_or_assign("rev", rev->gitRev());
